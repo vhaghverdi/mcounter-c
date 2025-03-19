@@ -1,0 +1,7 @@
+# Mom's Counter in C Minor
+
+This project is a C port of _Mom's Counter_, a programming exercise from Savitch's C++ textbook (chapter 10 on classes). It showcases two potential solutions to the lack of classes in C.
+
+In one case (`basic_test`), we create an [opaque data type](https://en.wikipedia.org/wiki/Opaque_data_type) called `MCounter`. The member variables of this struct are not visible to clients, and it is apparently passed to most functions as a simple variable despite being a pointer behind the scenes. Due to C's lack of namespaces, the functions in the interface are all prefixed with `mc_` (e.g., `mc_add_100()`). As `MCounter` is created dynamically via `mc_new()`, it must be freed by the caller via `mc_free()` (note that only this latter function takes the address of the object).
+
+In the second case (`basic_moo_test` and `moocounter`), we create a structure called `MooCounter` that is more object-oriented in nature as it contains function pointers. As C lacks "true" object orientation, the object itself is by convention passed in as the first argument. The only function callable from outside `MooCounter` objects is the constructor: `mc_new()`. This constructor takes on the responsibility of associating each new object's member function pointers with the corresponding function definitions. As `MooCounter` is not opaque, "private" variables are denoted with an underscore prefix (e.g., `_count`). This time around, objects are free by calling a member function (e.g., `myCounter->free(&myCounter)`).
