@@ -1,31 +1,40 @@
+#include "moocounter.h"
+#include <stdio.h>
 #include <stdlib.h>
 
-#include "../inc/moocounter.h"
+const int MAX_COUNT = 9999;
+const int ERR_COUNT = -9999;
 
-// PRIVATE IMPLEMENTATION
-
-MooCounter mc_new()
+MooCounter mooc_new()
 {
-	MooCounter mc = calloc(1, sizeof(*mc));
+	return mooc_new_n(0);
+}
 
-	mc->_count = 0;
-	mc->_error = false;
+MooCounter mooc_new_n(int n)
+{
+	MooCounter mc = malloc(sizeof(*mc));
+	if (mc == NULL) {
+		fprintf(stderr, "Failed to allocate memory for MooCounter.\n");
+		exit(1);
+	}
 
-	mc->add_1 = mc_add_1;
-	mc->add_10 = mc_add_10;
-	mc->add_100 = mc_add_100;
-	mc->add_1000 = mc_add_1000;
+	mc->_count = n;
+	mc->_error = mooc_is_error(mc);
 
-	mc->reset = mc_reset;
-	mc->count = mc_count;
-	mc->error = mc_error;
-
-	mc->free = mc_free;
+	mc->count = mooc_count;
+	mc->error = mooc_error;
+	mc->add_1 = mooc_add_1;
+	mc->add_10 = mooc_add_10;
+	mc->add_100 = mooc_add_100;
+	mc->add_1000 = mooc_add_1000;
+	mc->reset = mooc_reset;
+	mc->free = mooc_free;
+	mc->print = mooc_print;
 
 	return mc;
 }
 
-void mc_free(MooCounter *mc)
+void mooc_free(MooCounter *mc)
 {
 	if (mc && *mc) {
 		free(*mc);
@@ -33,54 +42,65 @@ void mc_free(MooCounter *mc)
 	}
 }
 
-int mc_add(MooCounter mc, int n)
+int mooc_count(MooCounter mc)
 {
-	if (mc_error(mc))
-		return mc_count(mc);
-
-	mc->_count += n;
-
-	if (mc->_count > 9999) {
-		mc->_error = true;
-		mc->_count = -9999;
-	}
-
-	return mc_count(mc);
+	return mc->_count;
 }
 
-int mc_add_1(MooCounter mc)
+bool mooc_error(MooCounter mc)
 {
-	return mc_add(mc, 1);
+	return mc->_error;
 }
 
-int mc_add_10(MooCounter mc)
+int mooc_add_1(MooCounter mc)
 {
-	return mc_add(mc, 10);
+	return mooc_add(mc, 1);
 }
 
-int mc_add_100(MooCounter mc)
+int mooc_add_10(MooCounter mc)
 {
-	return mc_add(mc, 100);
+	return mooc_add(mc, 10);
 }
 
-int mc_add_1000(MooCounter mc)
+int mooc_add_100(MooCounter mc)
 {
-	return mc_add(mc, 1000);
+	return mooc_add(mc, 100);
 }
 
-int mc_reset(MooCounter mc)
+int mooc_add_1000(MooCounter mc)
+{
+	return mooc_add(mc, 1000);
+}
+
+int mooc_reset(MooCounter mc)
 {
 	mc->_error = false;
 	mc->_count = 0;
 	return mc->_count;
 }
 
-int mc_count(MooCounter mc)
+void mooc_print(MooCounter mc)
 {
+	printf("-------\n|");
+	if (mc->_error)
+		printf("ERROR");
+	else
+		printf(" %04d", mc->_count);
+	printf("|\n-------\n");
+}
+
+int mooc_add(MooCounter mc, int n)
+{
+	mc->_count += n;
+	mc->_error = mooc_is_error(mc);
+	if (mc->_error)
+		mc->_count = ERR_COUNT;
 	return mc->_count;
 }
 
-bool mc_error(MooCounter mc)
+bool mooc_is_error(MooCounter mc)
 {
-	return mc->_error;
+	if ((mc->_count > MAX_COUNT) || (mc->_count < 0))
+		return true;
+	return false;
 }
