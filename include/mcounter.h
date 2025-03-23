@@ -21,7 +21,3 @@ int mc_reset(MCounter mc); // reset count, clear error
 
 // utility
 void mc_print(MCounter mc);
-
-// private functions
-static int mc_add(MCounter mc, int n);
-static bool mc_is_error(MCounter mc);

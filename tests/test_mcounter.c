@@ -46,6 +46,8 @@ void test_add(void)
 
 	TEST_ASSERT_MESSAGE(mc_error(mc) == false,
 			    "Counter should not be in error state.");
+
+	mc_free(&mc);
 }
 
 void test_error(void)

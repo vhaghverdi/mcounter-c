@@ -2,8 +2,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-const int MAX_COUNT = 9999;
-const int ERR_COUNT = -9999;
+static const int MAX_COUNT = 9999;
+static const int ERR_COUNT = -9999;
+
+static void mooc_free(MooCounter *mc);
+static int mooc_count(MooCounter mc);
+static bool mooc_error(MooCounter mc);
+static int mooc_add_1(MooCounter mc);
+static int mooc_add_10(MooCounter mc);
+static int mooc_add_100(MooCounter mc);
+static int mooc_add_1000(MooCounter mc);
+static int mooc_reset(MooCounter mc);
+static void mooc_print(MooCounter mc);
+static int mooc_add(MooCounter mc, int n);
+static bool mooc_is_error(MooCounter mc);
 
 MooCounter mooc_new()
 {

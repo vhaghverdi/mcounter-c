@@ -1,5 +1,6 @@
 #include "mcounter.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 int main(void)
 {
@@ -13,7 +14,11 @@ int main(void)
 		printf("\n");
 		mc_print(mc);
 		printf("%s", prompt);
-		scanf(" %c", &input);
+
+		if (scanf(" %c", &input) != 1) {
+			fprintf(stderr, "Error while reading input.\n");
+			exit(1);
+		}
 
 		switch (input) {
 		case 'a':
@@ -44,4 +49,6 @@ int main(void)
 			break;
 		}
 	}
+
+	mc_free(&mc);
 }

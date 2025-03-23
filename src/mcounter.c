@@ -2,8 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-const int MAX_COUNT = 9999;
-const int ERR_COUNT = -9999;
+static const int MAX_COUNT = 9999;
+static const int ERR_COUNT = -9999;
+
+// private functions
+static int mc_add(MCounter mc, int n);
+static bool mc_is_error(MCounter mc);
 
 struct MCounter {
 	int count; // range: [0, 9999] (if error: -9999)
