@@ -68,6 +68,9 @@ void test_error(void)
 	mc->reset(mc);
 	mc->print(mc);
 	TEST_ASSERT_MESSAGE(mc->count(mc) == 0, "Expected count of 0.");
+	TEST_ASSERT_MESSAGE(
+		mc->error(mc) == false,
+		"Counter should not be in an error state after a reset.");
 
 	mc->free(&mc);
 }

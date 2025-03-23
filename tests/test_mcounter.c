@@ -68,6 +68,9 @@ void test_error(void)
 	mc_reset(mc);
 	mc_print(mc);
 	TEST_ASSERT_MESSAGE(mc_count(mc) == 0, "Expected count of 0.");
+	TEST_ASSERT_MESSAGE(
+		mc_error(mc) == false,
+		"Counter should not be in an error state after a reset.");
 
 	mc_free(&mc);
 }
